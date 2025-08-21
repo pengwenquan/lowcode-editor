@@ -1,10 +1,11 @@
 import React, { useState, type MouseEventHandler } from "react";
 import { useComponentConfigStore } from "../../../stores/component-config";
 import { type Component, useComponetsStore } from "../../../stores/components";
+import SelectedMask from "../SelectedMask";
 import HoverMask from "../HoverMask";
 
 export function EditArea() {
-  const { components } = useComponetsStore();
+  const { components, curComponentId, setCurComponentId } = useComponetsStore();
   const { componentConfig } = useComponentConfigStore();
 
   const [hoverComponentId, setHoverComponentId] = useState<number>();
@@ -25,7 +26,17 @@ export function EditArea() {
   };
 
   const handleMouseLeave = () => {
-    // setHoverComponentId(undefined);
+    setHoverComponentId(undefined);
+  };
+
+  const handleClick: MouseEventHandler  = (e) => {
+    const target = (e.target as HTMLElement).closest("[data-component-id]");
+    if (target) {
+      const componentId = target.getAttribute("data-component-id");
+      if (componentId) {
+        setCurComponentId(Number(componentId));
+      }
+    }
   };
 
   function renderComponents(components: Component[]): React.ReactNode {
@@ -51,14 +62,28 @@ export function EditArea() {
   }
 
   return (
-    <div className="h-[100%] edit-area" onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave}>
+    <div
+      className="h-[100%] edit-area"
+      onMouseOver={handleMouseOver}
+      onMouseLeave={handleMouseLeave}
+      onClick={handleClick}
+    >
       {renderComponents(components)}
-      {hoverComponentId && (
+      {hoverComponentId && curComponentId !== hoverComponentId &&(
         <HoverMask
+          portalWrapperClassName="portal-wrapper"
           containerClassName="edit-area"
           componentId={hoverComponentId}
         />
       )}
+      {curComponentId && (
+        <SelectedMask
+          portalWrapperClassName="portal-wrapper"
+          containerClassName="edit-area"
+          componentId={curComponentId}
+        />
+      )}
+      <div className="portal-wrapper"></div>
     </div>
   );
 }

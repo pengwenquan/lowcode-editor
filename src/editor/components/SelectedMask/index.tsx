@@ -1,17 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import {
-  useComponetsStore,
-  getComponentById,
-} from "../../../stores/components";
+import { getComponentById, useComponetsStore } from "../../../stores/components";
+import { Popconfirm, Space } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
 
-interface HoverMaskProps {
+interface SelectedMaskProps {
   portalWrapperClassName: string;
   containerClassName: string;
-  componentId: number;
+  componentId: number | null;
 }
 
-function HoverMask({ containerClassName, componentId, portalWrapperClassName }: HoverMaskProps) {
+function SelectedMask({
+  containerClassName,
+  portalWrapperClassName,
+  componentId,
+}: SelectedMaskProps) {
   const [position, setPosition] = useState({
     left: 0,
     top: 0,
@@ -21,7 +24,7 @@ function HoverMask({ containerClassName, componentId, portalWrapperClassName }: 
     labelLeft: 0,
   });
 
-  const { components } = useComponetsStore();
+  const { components, curComponentId, deleteComponent, setCurComponentId } = useComponetsStore();
 
   useEffect(() => {
     updatePosition();
@@ -40,7 +43,7 @@ function HoverMask({ containerClassName, componentId, portalWrapperClassName }: 
     const { top: containerTop, left: containerLeft } =
       container.getBoundingClientRect();
 
-    let labelTop = top - containerTop + container.scrollLeft;
+    let labelTop = top - containerTop + container.scrollTop;
     let labelLeft = left - containerLeft + width;
 
     if (labelTop <= 0) {
@@ -65,6 +68,11 @@ function HoverMask({ containerClassName, componentId, portalWrapperClassName }: 
     return getComponentById(componentId, components);
   }, [componentId]);
 
+  function handleDelete() {
+    deleteComponent(curComponentId!);
+    setCurComponentId(null);
+  }
+
   return createPortal(
     <>
       <div
@@ -72,7 +80,7 @@ function HoverMask({ containerClassName, componentId, portalWrapperClassName }: 
           position: "absolute",
           left: position.left,
           top: position.top,
-          backgroundColor: "rgba(0, 0, 255, 0.05)",
+          backgroundColor: "rgba(0, 0, 255, 0.1)",
           border: "1px dashed blue",
           pointerEvents: "none",
           width: position.width,
@@ -93,22 +101,36 @@ function HoverMask({ containerClassName, componentId, portalWrapperClassName }: 
           transform: "translate(-100%, -100%)",
         }}
       >
-        <div
-          style={{
-            padding: "0 8px",
-            backgroundColor: "blue",
-            borderRadius: 4,
-            color: "#fff",
-            cursor: "pointer",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {curComponent?.name}
-        </div>
+        <Space>
+          <div
+            style={{
+              padding: "0 8px",
+              backgroundColor: "blue",
+              borderRadius: 4,
+              color: "#fff",
+              cursor: "pointer",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {curComponent?.name}
+          </div>
+          {curComponentId !== 1 && (
+            <div style={{ padding: "0 8px", backgroundColor: "blue" }}>
+              <Popconfirm
+                title="确认删除？"
+                okText={"确认"}
+                cancelText={"取消"}
+                onConfirm={handleDelete}
+              >
+                <DeleteOutlined style={{ color: "#fff" }} />
+              </Popconfirm>
+            </div>
+          )}
+        </Space>
       </div>
     </>,
     el
   );
 }
 
-export default HoverMask;
+export default SelectedMask;
