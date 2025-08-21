@@ -5,7 +5,7 @@ import SelectedMask from "../SelectedMask";
 import HoverMask from "../HoverMask";
 
 export function EditArea() {
-  const { components, curComponentId, setCurComponentId } = useComponetsStore();
+  const { components, curComponentId, curComponent, setCurComponentId } = useComponetsStore();
   const { componentConfig } = useComponentConfigStore();
 
   const [hoverComponentId, setHoverComponentId] = useState<number>();

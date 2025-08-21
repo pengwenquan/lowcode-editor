@@ -5,6 +5,7 @@ import Page from "../editor/materials/Page";
 
 export interface ComponentConfig {
   name: string;
+  desc: string;
   defaultProps: Record<string, any>;
   component: any;
 }
@@ -23,6 +24,7 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
       name: "Container",
       defaultProps: {},
       component: Container,
+      desc: '容器'
     },
     Button: {
       name: "Button",
@@ -31,11 +33,13 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
         text: "按钮",
       },
       component: Button,
+      desc: '按钮'
     },
     Page: {
       name: "Page",
       defaultProps: {},
       component: Page,
+      desc: '页面'
     },
   },
   registerComponent: (name, componentConfig) =>

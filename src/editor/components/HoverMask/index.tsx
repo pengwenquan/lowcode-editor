@@ -11,7 +11,11 @@ interface HoverMaskProps {
   componentId: number;
 }
 
-function HoverMask({ containerClassName, componentId, portalWrapperClassName }: HoverMaskProps) {
+function HoverMask({
+  containerClassName,
+  componentId,
+  portalWrapperClassName,
+}: HoverMaskProps) {
   const [position, setPosition] = useState({
     left: 0,
     top: 0,
@@ -26,6 +30,22 @@ function HoverMask({ containerClassName, componentId, portalWrapperClassName }: 
   useEffect(() => {
     updatePosition();
   }, [componentId]);
+
+  useEffect(() => {
+    updatePosition();
+  }, [components]);
+
+  useEffect(() => {
+    const resizeHandler = () => {
+      setTimeout(() => {
+        updatePosition();
+      }, 100)
+    };
+    window.addEventListener("resize", resizeHandler);
+    return () => {
+      window.removeEventListener("resize", resizeHandler);
+    };
+  }, []);
 
   function updatePosition() {
     if (!componentId) return;
@@ -103,7 +123,7 @@ function HoverMask({ containerClassName, componentId, portalWrapperClassName }: 
             whiteSpace: "nowrap",
           }}
         >
-          {curComponent?.name}
+          {curComponent?.desc}
         </div>
       </div>
     </>,
