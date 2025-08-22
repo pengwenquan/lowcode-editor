@@ -3,6 +3,7 @@ import { create } from "zustand";
 export interface Component {
   id: number;
   name: string;
+  desc: string;
   props: any;
   children?: Component[];
   parentId?: number;
