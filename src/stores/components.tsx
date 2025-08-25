@@ -87,6 +87,7 @@ export const useComponetsStore = create<State & Action>((set, get) => ({
     }),
   updateComponentStyles: (componentId, styles) =>
     set((state) => {
+      console.log('styles', styles);
       const component = getComponentById(componentId, state.components);
       if (component) {
         component.styles = { ...component.styles, ...styles };
