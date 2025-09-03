@@ -2,7 +2,7 @@ import { Allotment } from "allotment";
 import { Header } from "./components/Header/index.tsx";
 import { EditArea } from "./components/EditArea/index.tsx";
 import { Setting } from "./components/Setting/index.tsx";
-import { Material } from "./components/Material";
+import { MaterialWrapper } from "./components/MaterialWrapper";
 import "allotment/dist/style.css";
 
 export default function ReactPlayground() {
@@ -13,7 +13,7 @@ export default function ReactPlayground() {
       </div>
       <Allotment>
         <Allotment.Pane preferredSize={240} maxSize={300} minSize={200}>
-          <Material />
+          <MaterialWrapper />
         </Allotment.Pane>
         <Allotment.Pane>
           <EditArea />
