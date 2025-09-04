@@ -15,6 +15,7 @@ export interface State {
   components: Component[];
   curComponentId: number | null;
   curComponent: Component | null;
+  mode: 'edit' | 'preview';
 }
 
 export interface Action {
@@ -23,6 +24,7 @@ export interface Action {
   updateComponentProps: (componentId: number, props: any) => void;
   updateComponentStyles: (componentId: number, styles: any, replace?: boolean) => void;
   setCurComponentId: (componentId: number | null) => void;
+  setMode: (mode: State['mode']) => void;
 }
 
 export const useComponetsStore = create<State & Action>((set, get) => ({
@@ -36,6 +38,8 @@ export const useComponetsStore = create<State & Action>((set, get) => ({
   ],
   curComponentId: null,
   curComponent: null,
+  mode: 'edit',
+  setMode: (mode) => set({mode}),
   addComponent: (component, parentId) =>
     set((state) => {
       console.log("component", state.components, component, parentId);
